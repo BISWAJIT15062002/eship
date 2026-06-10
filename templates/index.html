@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Ship Class Search{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-slider" aria-hidden="true">
+    <span style="--slide-image: url('https://commons.wikimedia.org/wiki/Special:FilePath/INS%20Vikrant%20%28R11%29%20with%20INAS%20303%20The%20Black%20Panthers.jpg?width=1400')"></span>
+    <span style="--slide-image: url('https://commons.wikimedia.org/wiki/Special:FilePath/INS%20Kolkata%20%28D63%29%20steams%20in%20formation%20while%20participating%20in%20Malabar%202020.jpg?width=1400')"></span>
+    <span style="--slide-image: url('https://commons.wikimedia.org/wiki/Special:FilePath/INS%20Chennai%20%28D65%29%20with%20JS%20Ikazuchi%20%28DD-107%29%20during%20JIMEX%202020.jpg?width=1400')"></span>
+    <span style="--slide-image: url('https://commons.wikimedia.org/wiki/Special:FilePath/INS%20Shivalik%20F-47%20during%20joint%20operations%20with%20U.S.%20Navy%20%28200720-N-KO930-1027%29.jpg?width=1400')"></span>
+    <span style="--slide-image: url('https://upload.wikimedia.org/wikipedia/commons/4/4c/INS_Vikramaditya_%28R33%29_with_a_Sea_Harrier.jpg')"></span>
+  </div>
+  <div class="hero-copy">
+    <p class="eyebrow">Naval reference search</p>
+    <h1>eShip Intelligence</h1>
+  
+  </div>
+</section>
+
+<section class="search-shell" aria-label="Ship class search and filters">
+  <div class="search-row">
+    <label class="search-box">
+      <span>Search ships</span>
+      <span class="search-input-wrap">
+        <span class="search-icon" aria-hidden="true"></span>
+        <input id="searchInput" type="search" placeholder="Search here to see data" autocomplete="off">
+        <button id="voiceSearchButton" class="voice-search-button" type="button" aria-label="Search by voice" aria-pressed="false" title="Search by voice">
+          <span class="voice-icon" aria-hidden="true"></span>
+        </button>
+      </span>
+      <small id="voiceSearchStatus" class="voice-search-status" aria-live="polite"></small>
+    </label>
+    <a class="camera-search-link" href="{{ url_for('image_search') }}" aria-label="Search ship classes by image">
+      <span class="camera-button" aria-hidden="true"><span></span></span>
+      <span>Image Search</span>
+    </a>
+  </div>
+
+  <div class="filters-grid">
+    <label>
+      <span>Country</span>
+      <select id="countryFilter">
+        <option value="">All countries</option>
+        {% for country in facets.countries %}
+        <option value="{{ country }}">{{ country }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      <span>Section</span>
+      <select id="sectionFilter">
+        <option value="">All sections</option>
+        {% for section in facets.sections %}
+        <option value="{{ section }}">{{ section }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      <span>Type</span>
+      <select id="typeFilter">
+        <option value="">All types</option>
+        {% for type in facets.types %}
+        <option value="{{ type }}">{{ type }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      <span>Speed</span>
+      <select id="speedFilter">
+        <option value="">Any speed</option>
+        <option value="20">20+ knots</option>
+        <option value="25">25+ knots</option>
+        <option value="28">28+ knots</option>
+        <option value="30">30+ knots</option>
+      </select>
+    </label>
+    <label>
+      <span>Builder</span>
+      <select id="builderFilter">
+        <option value="">All builders</option>
+        {% for builder in facets.builders %}
+        <option value="{{ builder }}">{{ builder }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </div>
+  <div class="filter-actions">
+    <button id="clearFilters" class="clear-filters" type="button">Clear Filters</button>
+  </div>
+</section>
+
+<section class="results-toolbar" aria-live="polite">
+  <p id="resultCount">Showing 0 classes</p>
+  <label>
+    <span>Per page</span>
+    <select id="pageSize">
+      <option value="6">6</option>
+      <option value="12">12</option>
+      <option value="20" selected>20</option>
+    </select>
+  </label>
+</section>
+
+<section id="cardsGrid" class="cards-grid" aria-label="Ship class results"></section>
+
+<nav id="pagination" class="pagination" aria-label="Pagination"></nav>
+
+<section class="navy-info" aria-label="About naval forces">
+  <div>
+    <p class="eyebrow">Navy overview</p>
+    <h2>Navies protect sea routes, coastlines, and national interests.</h2>
+  </div>
+  <div class="navy-info-grid">
+    <p>Modern naval forces operate across patrol, escort, amphibious, logistics, mine warfare, aviation, and submarine roles. Each ship class is designed around mission needs such as endurance, speed, sensors, weapons, and crew capacity.</p>
+    <p>This browser helps compare classes by country, section, type, builder, speed, and ship list. Later, Elasticsearch can power the same interface with larger datasets, faster search, and more advanced filters.</p>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

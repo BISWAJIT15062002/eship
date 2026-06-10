@@ -1,0 +1,12 @@
+import os
+
+
+ELASTIC_URL = os.getenv("ELASTIC_URL", "http://localhost:9200")
+ELASTIC_USERNAME = os.getenv("ELASTIC_USERNAME", "")
+ELASTIC_PASSWORD = os.getenv("ELASTIC_PASSWORD", "")
+ELASTIC_BASIC_AUTH = (
+    (ELASTIC_USERNAME, ELASTIC_PASSWORD)
+    if ELASTIC_USERNAME and ELASTIC_PASSWORD
+    else None
+)
+ELASTIC_INDEX = os.getenv("ELASTIC_INDEX", "ships")

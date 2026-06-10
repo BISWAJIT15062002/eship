@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Naval Ship Classes{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="{{ url_for('home') }}">Naval Ship Classes</a>
+      <div class="header-actions">
+        {% block header_search %}{% endblock %}
+        <div class="menu-wrap">
+          <span class="india-flag" aria-label="India flag" role="img">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+          <button id="menuToggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="topMenu" aria-label="Open menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          
+        </div>
+      </div>
+    </header>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+    <section class="chatbot" aria-label="Ship assistant">
+      <button id="chatToggle" class="chat-toggle" type="button" aria-expanded="false" aria-controls="chatPanel">
+        <span class="chat-toggle-icon" aria-hidden="true">
+          <span class="bot-antenna"></span>
+          <span class="bot-face">
+            <span></span>
+            <span></span>
+          </span>
+        </span>
+        <span class="sr-only">Open ship assistant chat</span>
+      </button>
+      <div id="chatPanel" class="chat-panel" aria-hidden="true">
+        <div class="chat-header">
+          <div>
+            <strong>Ship Assistant</strong>
+            <span>Ask about classes, countries, builders, or speed.</span>
+          </div>
+          <button id="chatClose" type="button" aria-label="Close chat">&times;</button>
+        </div>
+        <div id="chatMessages" class="chat-messages" aria-live="polite">
+          <div class="chat-message bot">Hello. Ask me about any ship class.</div>
+        </div>
+        <form id="chatForm" class="chat-form">
+          <input id="chatInput" type="text" placeholder="Ask about naval ships..." autocomplete="off">
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+    <script src="{{ url_for('static', filename='js/layout.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

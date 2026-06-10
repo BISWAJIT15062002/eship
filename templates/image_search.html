@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Image Similarity Search{% endblock %}
+
+{% block content %}
+<section class="image-search-page" aria-label="Ship image similarity search">
+  <a class="back-link" href="{{ url_for('home') }}">Back to search</a>
+
+  <div class="image-search-layout">
+    <section class="image-upload-panel">
+      <p class="eyebrow">Visual ship matching</p>
+      <h1>Find Similar Ship Classes</h1>
+      <form class="image-upload-form" action="{{ url_for('image_search_upload') }}" method="post" enctype="multipart/form-data">
+        <label id="cameraUpload" class="camera-upload">
+          <span class="camera-button" aria-hidden="true">
+            <span></span>
+          </span>
+          <span class="upload-copy">
+            <span id="uploadTitle">Upload ship image</span>
+            <small id="uploadHint">JPG, PNG, or WEBP up to 8 MB</small>
+          </span>
+          <input id="shipImageInput" type="file" name="ship_image" accept="image/jpeg,image/png,image/webp" required>
+        </label>
+        <button class="primary-action" type="submit">Search Similar Classes</button>
+      </form>
+      {% if error %}
+      <p class="form-error">{{ error }}</p>
+      {% endif %}
+    </section>
+
+    <section class="uploaded-preview" aria-label="Uploaded image preview">
+      {% if uploaded_image %}
+      <img src="{{ uploaded_image }}" alt="Uploaded ship image">
+      {% else %}
+      <div class="preview-placeholder">
+        <span class="camera-button large" aria-hidden="true"><span></span></span>
+        <p>Choose a ship image to compare it with indexed naval classes.</p>
+      </div>
+      {% endif %}
+    </section>
+  </div>
+
+  {% if matches %}
+  <section class="similarity-results" aria-label="Similar ship class results">
+    <div class="results-heading">
+      <p class="eyebrow">Best matches</p>
+      <h2>Similar classes found</h2>
+    </div>
+    <div class="cards-grid">
+      {% for item in matches %}
+      {% set image = item.images[0] if item.images else none %}
+      <article class="ship-card similarity-card">
+        <a class="ship-card-media" href="{{ url_for('class_details', slug=item.slug) }}" aria-label="View {{ item.class_name }} image">
+          {% if image %}
+          <img src="{{ image.url }}" alt="{{ image.alt or item.class_name }}" loading="lazy">
+          {% else %}
+          <span>No image</span>
+          {% endif %}
+        </a>
+        <div>
+          <p class="match-score">Score {{ item.match_score }}</p>
+          <h2>{{ item.class_name }}</h2>
+          <dl>
+            <div><dt>Country</dt><dd>{{ item.country }}</dd></div>
+            <div><dt>Type</dt><dd>{{ item.type }}</dd></div>
+            <div><dt>Matched Ship</dt><dd>{{ item.matched_ship or "Class image" }}</dd></div>
+            <div><dt>Ships</dt><dd>{{ item.ships | length }}</dd></div>
+          </dl>
+        </div>
+        <a class="card-action" href="{{ url_for('class_details', slug=item.slug) }}">View Details</a>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% elif uploaded_image and not error %}
+  <div class="empty-state image-empty">No similar ship classes were found.</div>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const imageInput = document.getElementById("shipImageInput");
+  const cameraUpload = document.getElementById("cameraUpload");
+  const uploadTitle = document.getElementById("uploadTitle");
+  const uploadHint = document.getElementById("uploadHint");
+
+  if (imageInput && cameraUpload && uploadTitle && uploadHint) {
+    imageInput.addEventListener("change", () => {
+      const file = imageInput.files && imageInput.files[0];
+
+      if (!file) {
+        cameraUpload.classList.remove("has-file");
+        uploadTitle.textContent = "Upload ship image";
+        uploadHint.textContent = "JPG, PNG, or WEBP up to 8 MB";
+        return;
+      }
+
+      cameraUpload.classList.add("has-file");
+      uploadTitle.textContent = "Image added";
+      uploadHint.textContent = `${file.name} selected. Click Search Similar Classes.`;
+    });
+  }
+</script>
+{% endblock %}

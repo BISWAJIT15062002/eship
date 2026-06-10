@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}{{ ship_class.class_name }}{% endblock %}
+
+{% block content %}
+<article class="details-page">
+  <a class="back-link" href="{{ url_for('home') }}">Back to search</a>
+
+  <section class="details-hero">
+    <div>
+      <p class="eyebrow">{{ ship_class.country }} / {{ ship_class.section }}</p>
+      <h1>{{ ship_class.class_name }}</h1>
+      <p>{{ ship_class.description }}</p>
+    </div>
+    <div class="stat-strip" aria-label="Key class facts">
+      <span><strong>{{ ship_class.type }}</strong> Type</span>
+      <span><strong>{{ ship_class.speed_knots }}</strong> knots</span>
+      <span><strong>{{ ship_class.ships | length }}</strong> ships</span>
+    </div>
+  </section>
+
+  <section class="details-section">
+    <h2>Class Information</h2>
+    <div class="info-grid">
+      <p><span>Country</span>{{ ship_class.country }}</p>
+      <p><span>Section</span>{{ ship_class.section }}</p>
+      <p><span>Type</span>{{ ship_class.type }}</p>
+    </div>
+  </section>
+
+  <section class="details-section">
+    <h2>Specifications</h2>
+    <div class="spec-grid">
+      <p><span>Speed</span>{{ ship_class.speed_knots }} knots</p>
+      <p><span>Range</span>{{ ship_class.range }}</p>
+      <p><span>Displacement</span>{{ ship_class.displacement }}</p>
+      <p><span>Length</span>{{ ship_class.length }}</p>
+      <p><span>Beam</span>{{ ship_class.beam }}</p>
+      <p><span>Draft</span>{{ ship_class.draft }}</p>
+      <p><span>Crew</span>{{ ship_class.crew }}</p>
+    </div>
+    {% if ship_class.specifications %}
+    <div class="raw-specs">
+      {% for label, value in ship_class.specifications.items() %}
+      <p><span>{{ label }}</span>{{ value }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="details-section">
+    <h2>Ships</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Pennant</th>
+            <th>Builder</th>
+            <th>Ordered</th>
+            <th>Launched</th>
+            <th>Commissioned</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ship in ship_class.ships %}
+          <tr>
+            <td>{{ ship.name or "Unknown" }}</td>
+            <td>{{ ship.pennant or "-" }}</td>
+            <td>{{ ship.builder or "-" }}</td>
+            <td>{{ ship.ordered or "-" }}</td>
+            <td>{{ ship.launched or "-" }}</td>
+            <td>{{ ship.commissioned or "-" }}</td>
+            <td>{{ ship.status or "Unknown" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="details-section">
+    <h2>Images</h2>
+    <div class="gallery">
+      {% for image in ship_class.images %}
+      <button class="gallery-item" type="button" data-full-image="{{ image.url }}" data-alt="{{ image.alt }}">
+        <img src="{{ image.url }}" alt="{{ image.alt }}">
+      </button>
+      {% endfor %}
+    </div>
+  </section>
+</article>
+
+<div id="imageModal" class="image-modal" aria-hidden="true" role="dialog" aria-label="Image viewer">
+  <button id="closeModal" class="modal-close" type="button" aria-label="Close image viewer">×</button>
+  <img id="modalImage" alt="">
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/details.js') }}"></script>
+{% endblock %}
