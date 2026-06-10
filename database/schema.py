@@ -1,4 +1,10 @@
+import sys
+from pathlib import Path
+
 from elasticsearch import Elasticsearch
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(BASE_DIR))
 
 from config import ELASTIC_BASIC_AUTH, ELASTIC_INDEX, ELASTIC_URL
 

@@ -1,10 +1,15 @@
 # services/embedding_service.py
 
 import base64
+import sys
 from io import BytesIO
+from pathlib import Path
 
 import torch
 from PIL import Image
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(BASE_DIR))
 
 from models.clip import (
     model,

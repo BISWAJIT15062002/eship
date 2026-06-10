@@ -1,13 +1,18 @@
 # scripts/generate_embeddings.py
 
 import json
+import sys
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(BASE_DIR))
 
 from services.embedding_service import (
     get_image_embedding_from_base64
 )
 
-INPUT_FILE = "data/flattened_ships_with_base64.json"
-OUTPUT_FILE = "data/flattened_ships_with_embeddings.json"
+INPUT_FILE = BASE_DIR / "data" / "flattened_ships_with_base64.json"
+OUTPUT_FILE = BASE_DIR / "data" / "flattened_ships_with_embeddings.json"
 
 
 def generate_embeddings():
