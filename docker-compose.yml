@@ -3,30 +3,26 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
     container_name: project_navy_elasticsearch
     environment:
-      discovery.type: single-node
-      xpack.security.enabled: "false"
-      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
     ports:
       - "9200:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
-    healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:9200/_cluster/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
+    restart: unless-stopped
 
   flask:
-    build: .
+    image: tweakster1819/eshipv1:latest
     container_name: project_navy_flask
     environment:
-      ELASTIC_URL: http://elasticsearch:9200
-      ELASTIC_INDEX: ships
+      - ELASTIC_URL=http://elasticsearch:9200
+      - ELASTIC_INDEX=ships
     ports:
       - "5000:5000"
     depends_on:
-      elasticsearch:
-        condition: service_healthy
+      - elasticsearch
+    restart: unless-stopped
 
 volumes:
   elasticsearch-data:
